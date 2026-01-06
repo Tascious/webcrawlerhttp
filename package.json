@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --no-warnings index.js",
     "test": "jest"
   },
   "devDependencies": {

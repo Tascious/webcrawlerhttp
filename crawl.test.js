@@ -8,12 +8,28 @@ test("normaliseUrl strip slashes",()=>
     const expected ="";
     expect(actual).toEqual(expected);
 })
-test("getUrlFromHtml",()=>
+test("getUrlFromHtml absolute",()=>
 {
     const inputhtmlBody= `
     <html>
         <body>
-            <a href="https://blog.tasciousCamp.dev">
+            <a href="https://blog.tasciousCamp.dev/path/">
+                Camp.tascious Blog
+            </a>
+        </body>
+    </html>        
+                `;
+    const inputBaseUrl="http://blog.tasciousCamp.dev"
+    const actual = getUrlsFromHtml(inputhtmlBody,inputBaseUrl);
+    const expected =["http://blog.tasciousCamp.dev/path/"];
+    expect(actual).toEqual(expected);
+})
+test("getUrlFromHtml relative",()=>
+{
+    const inputhtmlBody= `
+    <html>
+        <body>
+            <a href="/path/">
                 Camp.tascious Blog
             </a>
         </body>
@@ -24,3 +40,39 @@ test("getUrlFromHtml",()=>
     const expected =["http://blog.tasciousCamp.dev"];
     expect(actual).toEqual(expected);
 })
+test("getUrlFromHtml both",()=>
+{
+    const inputhtmlBody= `
+    <html>
+        <body>
+            <a href="https://blog.tasciousCamp.dev/path1/">
+                Camp.tascious Blog
+            </a>
+            <a href=/path2/>
+            camp.tascious.Blog
+            </a>
+        </body>
+    </html>        
+                `;
+    const inputBaseUrl="http://blog.tasciousCamp.dev"
+    const actual = getUrlsFromHtml(inputhtmlBody,inputBaseUrl);
+    const expected =["http://blog.tasciousCamp.dev/path1/","http://blog.tasciousCamp.dev/path2/"];
+    expect(actual).toEqual(expected);
+})
+test("getUrlFromHtml invalid",()=>
+{
+    const inputhtmlBody= `
+    <html>
+        <body>
+            <a href="invalid">
+            Unknown url
+            </a>
+        </body>
+    </html>        
+                `;
+    const inputBaseUrl="http://blog.tasciousCamp.dev"
+    const actual = getUrlsFromHtml(inputhtmlBody,inputBaseUrl);
+    const expected =[];
+    expect(actual).toEqual(expected);
+})
+
